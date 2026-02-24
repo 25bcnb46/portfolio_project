@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarang | Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Modern CSS Reset & Variables */
+        :root {
+            --primary-color: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f8fafc;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --card-bg: #ffffff;
+        }
+
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            margin: 0; 
+            padding: 0; 
+            background-color: var(--bg-color); 
+            color: var(--text-main); 
+            line-height: 1.6;
+        }
+
+        /* Hero Header with Gradient */
+        header { 
+            background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
+            color: white; 
+            padding: 80px 20px; 
+            text-align: center; 
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        /* UPDATED: Subtitle with the new Cyan accent color */
+        header p {
+            margin: 10px 0 0 0;
+            font-size: 1.2rem;
+            font-weight: 400; 
+            color: #a5f3fc;   
+            letter-spacing: 1px; 
+        }
+
+        /* Main Content Container */
+        .container { 
+            max-width: 800px; 
+            margin: -40px auto 40px auto; /* Pulls container up over the header slightly */
+            padding: 0 20px; 
+        }
+
+        /* Modern Cards */
+        section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+
+        h2 { 
+            color: var(--text-main);
+            font-size: 1.8rem;
+            margin-top: 0;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+        }
+
+        p { color: var(--text-light); }
+
+        /* Form Styling */
+        form { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        input, textarea { 
+            padding: 12px 16px; 
+            font-size: 1rem; 
+            font-family: 'Poppins', sans-serif;
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            background-color: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+        }
+
+        button { 
+            padding: 14px; 
+            font-size: 1rem; 
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--primary-color); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        button:hover { 
+            background-color: var(--primary-hover); 
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        #response-msg { 
+            margin-top: 20px; 
+            font-weight: 600; 
+            text-align: center; 
+            padding: 10px;
+            border-radius: 6px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            section { padding: 25px; }
+            header { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Sarang C R</h1>
+        <p>BCA Analytics Student | Web Developer</p>
+    </header>
+
+    <div class="container">
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Hello! I am currently pursuing my BCA in Analytics at Kristu Jayanti UNIVERSITY. I have a strong interest in combining data analytics with modern web development. My current tech stack includes Python, HTML/CSS/JavaScript, and MySQL.</p>
+            <p>When I'm not coding or working with data, you can usually find me playing football.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Let's Connect</h2>
+            <form id="contactForm">
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" placeholder="John Doe" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" rows="5" placeholder="How can I help you?" required></textarea>
+                </div>
+
+                <button type="submit">Send Message</button>
+            </form>
+            <div id="response-msg"></div>
+        </section>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(event) {
+            event.preventDefault(); 
+            
+            const submitBtn = document.querySelector('button[type="submit"]');
+            submitBtn.innerText = 'Sending...';
+            submitBtn.disabled = true;
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
+
+            fetch('/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                const msgBox = document.getElementById('response-msg');
+                submitBtn.innerText = 'Send Message';
+                submitBtn.disabled = false;
+
+                if (data.status === "success") {
+                    msgBox.style.color = "#15803d";
+                    msgBox.style.backgroundColor = "#dcfce7";
+                    msgBox.innerText = data.message;
+                    document.getElementById('contactForm').reset(); 
+                } else {
+                    msgBox.style.color = "#b91c1c";
+                    msgBox.style.backgroundColor = "#fee2e2";
+                    msgBox.innerText = "Error: " + data.message;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                submitBtn.innerText = 'Send Message';
+                submitBtn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
