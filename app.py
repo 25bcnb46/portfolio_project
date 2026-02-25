@@ -1,32 +1,23 @@
 from flask import Flask, render_template, request, jsonify
-import sqlite3 # Built-in Python library! No pip install needed.
+import mysql.connector
 
 app = Flask(__name__)
 
-# --- NEW: This automatically creates your database and table! ---
-def init_db():
-    # This creates a file called 'portfolio.db' in your folder
-    conn = sqlite3.connect('portfolio.db') 
-    cursor = conn.cursor()
-    # Create the table if it doesn't exist yet
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS contacts (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            message TEXT NOT NULL
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# 1. Connect to your XAMPP Database
+db_config = {
+    'host': 'localhost',
+    'user': 'root',      # Default XAMPP username is 'root'
+    'password': '',      # Default XAMPP password is blank
+    'database': 'portfolio_db'
+}
 
-# Run the setup function when the app starts
-init_db() 
-
+# 2. Show the homepage when someone visits your site
 @app.route('/')
 def home():
-    return render_template('index.html')
+    # Flask will look inside the 'templates' folder for this file
+    return render_template('index.html') 
 
+# 3. Receive form data and save it to the database
 @app.route('/submit', methods=['POST'])
 def submit_form():
     data = request.json
@@ -35,19 +26,18 @@ def submit_form():
     message = data.get('message')
 
     try:
-        # Connect to the SQLite database file
-        conn = sqlite3.connect('portfolio.db')
+        # Open the drawer, write the data in the spreadsheet, close the drawer
+        conn = mysql.connector.connect(**db_config)
         cursor = conn.cursor()
         
-        # Insert the data (SQLite uses ? instead of %s)
-        query = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)"
+        query = "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)"
         cursor.execute(query, (name, email, message))
         
-        conn.commit()
+        conn.commit() # This saves the changes
         cursor.close()
         conn.close()
         
-        return jsonify({"status": "success", "message": "Message saved to SQLite database!"})
+        return jsonify({"status": "success", "message": "Message saved to database!"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
