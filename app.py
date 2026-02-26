@@ -1,23 +1,30 @@
 from flask import Flask, render_template, request, jsonify
-import mysql.connector
+from flask_cors import CORS
+import sqlite3
 
 app = Flask(__name__)
+CORS(app) # This allows your frontend to talk to your backend safely
 
-# 1. Connect to your XAMPP Database
-db_config = {
-    'host': 'localhost',
-    'user': 'root',      # Default XAMPP username is 'root'
-    'password': '',      # Default XAMPP password is blank
-    'database': 'portfolio_db'
-}
+def init_db():
+    conn = sqlite3.connect('portfolio.db') 
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS contacts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            message TEXT NOT NULL
+        )
+    ''')
+    conn.commit()
+    conn.close()
 
-# 2. Show the homepage when someone visits your site
+init_db() 
+
 @app.route('/')
 def home():
-    # Flask will look inside the 'templates' folder for this file
-    return render_template('index.html') 
+    return render_template('index.html')
 
-# 3. Receive form data and save it to the database
 @app.route('/submit', methods=['POST'])
 def submit_form():
     data = request.json
@@ -26,18 +33,15 @@ def submit_form():
     message = data.get('message')
 
     try:
-        # Open the drawer, write the data in the spreadsheet, close the drawer
-        conn = mysql.connector.connect(**db_config)
+        conn = sqlite3.connect('portfolio.db')
         cursor = conn.cursor()
-        
-        query = "INSERT INTO contacts (name, email, message) VALUES (%s, %s, %s)"
+        query = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)"
         cursor.execute(query, (name, email, message))
-        
-        conn.commit() # This saves the changes
+        conn.commit()
         cursor.close()
         conn.close()
         
-        return jsonify({"status": "success", "message": "Message saved to database!"})
+        return jsonify({"status": "success", "message": "Message saved successfully!"})
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
