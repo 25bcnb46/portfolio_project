@@ -45,5 +45,25 @@ def submit_form():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)})
 
+@app.route('/messages')
+def view_messages():
+    try:
+        conn = sqlite3.connect('portfolio.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM contacts")
+        rows = cursor.fetchall()
+        conn.close()
+
+        # Build a simple HTML list to display the data
+        output = "<h1>Live Database Messages</h1><ul style='font-family: Arial; line-height: 1.8;'>"
+        for row in rows:
+            output += f"<li><strong>Name:</strong> {row[1]} | <strong>Email:</strong> {row[2]} | <strong>Message:</strong> {row[3]}</li>"
+        output += "</ul><br><a href='/'>Go back to Portfolio</a>"
+        
+        return output
+    except Exception as e:
+        return f"Database error: {str(e)}"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
