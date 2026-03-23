@@ -97,8 +97,13 @@ def view_messages():
     except Exception as e:
         return f"Database error: {str(e)}"
 
-if __name__ == '__main__':
-    # Initialize DB only if URL is present (prevents local crashes)
-    if os.getenv("DATABASE_URL"):
+# --- 6. Initialize Database for Render ---
+# Gunicorn skips the __main__ block, so we force it to run here!
+if os.getenv("DATABASE_URL"):
+    try:
         init_db()
+    except Exception as e:
+        print("Could not initialize DB:", e)
+
+if __name__ == '__main__':
     app.run(debug=True)
