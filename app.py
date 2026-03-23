@@ -106,10 +106,7 @@ if os.getenv("DATABASE_URL"):
         print("Could not initialize DB:", e)
 
 if __name__ == '__main__':
-<<<<<<< HEAD
-    app.run(debug=True)
-=======
     app.run(debug=True)
 
 
->>>>>>> c093bf93a323fd0324cff5c17930052a63f7d2c5
+
